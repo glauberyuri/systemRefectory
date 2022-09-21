@@ -18,6 +18,8 @@ return new class extends Migration
             $table->increments('id_request');
             $table->float('request_value');
             $table->datetime('request_date');
+            $table->integer('is_dinner');
+
 
             //adicionar o relacionamento com a tabela funcionarios
             $table->integer('id_employee')->unsigned()->nullable();

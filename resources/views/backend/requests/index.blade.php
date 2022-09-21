@@ -70,9 +70,7 @@
                   { data: 'employee_code'},
                   { data: 'employee_name'},
                   { data: 'employee_sector' },
-                  { data: 'request_status', render: function(data){
-                        return (data == 0 ? "Inativo" : "Ativo");
-                  }},
+                  { data: 'id_status'},
                   { data: 'type_description'},
                   { data: null, render: function(data, idx, tp){
                     return '<div  class="action-btn" style="float: right; font-size: 22px;">'

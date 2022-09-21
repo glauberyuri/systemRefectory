@@ -5,33 +5,37 @@
 <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
-                    <div class="col-lg-12">
+                        <div class="col-lg-12">
                                 <div class="card">
-                                    <div class="card-header">Lista de Funcionarios</div>
-                                    <div class="card-body">
-                                        <div class="card-title">
-                                            <h3 class="text-center title-2">Funcionarios</h3>
+                                    <div class="card-header">
+                                        <div class="overview-wrap">
+                                            <h5 class="title-5">Lista de Funcionarios</h5>
+                                                <button type="button"  class="au-btn au-btn-icon au-btn--blue" onclick="openModalCreate()">
+                                                <i class="zmdi zmdi-plus"></i>Cadastrar</button>
                                         </div>
-                                        <div class="md-8">
-                                            <button type="button"  onclick="openModalCreate()"  class="btn btn-light-info text-info font-weight-medium rounded-pill px-4" href=""> Novo Funcionario </button>
-                                        </div>
-                                        <hr>
-                                        <table id="list-employees" class="table">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                <th scope="col">Matricula</th>
-                                                <th scope="col">Nome</th>
-                                                <th scope="col">Setor</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Ações</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
                                     </div>
-                                </div>
-                            </div>
+                                        <div class="col-lg-12">
+                                            <div class="card-body">
+                                                <div class="card-title">
+                                                    <h3 class="text-center title-2">Funcionarios</h3>
+                                                </div>
+                                                <hr>
+                                                <table id="list-employees" class="table">
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                        <th scope="col">Matricula</th>
+                                                        <th scope="col">Nome</th>
+                                                        <th scope="col">Setor</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Ações</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                              </div>
                         
                         </div>
                        
@@ -70,7 +74,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -78,33 +81,27 @@
                                 <input id="employee_sector" name="employee_sector" type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="x_card_code" class="control-label mb-1">Matricula</label>
-                            <div class="input-group">
-                                <input id="employee_code" name="employee_code" type="tel" class="form-control cc-cvc" value="">
-                            </div>
+                        <div class="form-group has-success">
+                            <label for="cc-name" class="control-label mb-1">Email</label>
+                            <input id="employee_email" name="employee_email" type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                         </div>
-                    </div>
-                    <div class="form-group has-success">
-                        <label for="cc-name" class="control-label mb-1">Email</label>
-                        <input id="employee_email" name="employee_email" type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <label for="cc-number"  class="control-label mb-1">Status</label>
                             <div class="form-group">
-                            <label class="switch switch-default switch-success mr-2">
-                                <input type="checkbox" name="id_status"  class="switch-input" checked="true">
-                                <span class="switch-label"></span>
-                                <span class="switch-handle"></span>
-                            </label>
+                                <label class="switch switch-default switch-success mr-2">
+                                    <input type="checkbox" name="id_status" id="id_status"  class="switch-input" checked="true">
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <label for="cc-number"  class="control-label mb-1">Médico?</label>
                             <div class="form-group">
                             <label class="switch switch-default switch-success mr-2">
-                                <input type="checkbox" name="id_status"  class="switch-input" checked="true">
+                                <input type="checkbox" name="is_doctor" id="is_doctor"  class="switch-input">
                                 <span class="switch-label"></span>
                                 <span class="switch-handle"></span>
                             </label>
@@ -141,9 +138,19 @@
             <div class="modal-body">
                  <form id="form-modal-edit-employee" method="POST"  novalidate="novalidate">
                     @csrf
-                    <div class="form-group">
-                        <label for="cc-payment" class="control-label mb-1">Nome Completo</label>
-                        <input id="model-employee_name" name="employee_name"  type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="x_card_code" class="control-label mb-1">Matricula</label>
+                            <div class="input-group">
+                                <input id="model-employee_code" name="employee_code"  type="tel" class="form-control cc-cvc" value="">
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="cc-payment" class="control-label mb-1">Nome Completo</label>
+                                <input id="model-employee_name" name="employee_name"  type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
@@ -152,16 +159,10 @@
                                 <input id="model-employee_sector" name="employee_sector"  type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="x_card_code" class="control-label mb-1">Matricula</label>
-                            <div class="input-group">
-                                <input id="model-employee_code" name="employee_code"  type="tel" class="form-control cc-cvc" value="">
-                            </div>
+                        <div class="form-group has-success">
+                            <label for="cc-name" class="control-label mb-1">Email</label>
+                            <input id="model-employee_email" name="employee_email"  type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                         </div>
-                    </div>
-                    <div class="form-group has-success">
-                        <label for="cc-name" class="control-label mb-1">Email</label>
-                        <input id="model-employee_email" name="employee_email"  type="text" class="form-control" aria-required="true" aria-invalid="false" value="">
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -174,18 +175,22 @@
                             </label>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
+                            <label for="cc-number"  class="control-label mb-1">Médico?</label>
                             <div class="form-group">
-                                <label for="cc-number" class="control-label mb-1">Telefone</label>
-                                <input id="model-employee_number" name="employee_number" type="number" class="form-control" aria-required="true" aria-invalid="false" value="">
+                            <label class="switch switch-default switch-success mr-2">
+                                <input type="checkbox" name="model-is_doctor" id="model-is_doctor"  class="switch-input">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                            </label>
                             </div>
                         </div>
                     </div>
             </div>
             <div class="modal-footer">
                         <button id="payment-button" type="button" onclick="editEmployee()" class="btn btn-lg btn-info btn-block">
-                                        <i class="fa fa-plus-square"></i>&nbsp;
-                                        <span id="payment-button-amount">Cadastrar</span>
+                                        <i class="fa  fa-wrench"></i>&nbsp;
+                                        <span id="payment-button-amount">Salvar</span>
                                         <span id="payment-button-sending" style="display:none;">Sending…</span>
                         </button>
                 </form>

@@ -14,7 +14,6 @@ class Employees extends Model
     protected $fillable = [
         'employee_name',
         'employee_sector',
-        'employee_number',
         'employee_code',
         'employee_email'
 
@@ -28,7 +27,6 @@ class Employees extends Model
     protected $casts = [
         'employee_name' => 'string',
         'employee_sector'=> 'string',
-        'employee_number'=> 'string',
         'employee_code'=> 'string',
         'employee_email'=> 'string'
 

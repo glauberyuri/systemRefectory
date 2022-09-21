@@ -17,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-// Route::get("/", function () {
-//     return redirect(route("home"));
-// });
+Route::get("/",  ["as" => "refectory_request.index",   "uses" => "RequestController@index"]);
 
  
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name="home";
@@ -37,7 +35,6 @@ Route::group(["prefix" => "refectory_employee"], function(){
 });
 // Solicitação de refeições
 Route::group(["prefix" => "refectory_request"], function () {
-    Route::get("/",                                                                ["as" => "refectory_request.index",   "uses" => "RequestController@index"]);
     Route::post("/store",                                                          ["as" => "refectory_request.store",   "uses" => "RequestController@store"]);
     Route::get("/listRequest",                                                     ["as" => "refectory_request.listRequest", "uses" => "RequestController@listRequest"]);
     Route::get("/showrequest",                                                     ["as" => "refectory_request.showrequest", "uses" => "RequestController@show"]);
@@ -51,5 +48,6 @@ Route::group(["prefix" => "refectory_request"], function () {
 // Configuração
 Route::group(["prefix" => "refectory_config"], function () {
     Route::get("/",                                                                 ["as" => "refectory_config.index", "uses" =>  "ConfigController@index"]);
+    Route::post("/store",                                                          ["as" => "refectory_config.store",   "uses" => "ConfigController@store"]);
 });
 

@@ -14,7 +14,9 @@ class ConfigController extends Controller
      */
     public function index()
     {
-        return view('backend.config.create');
+        $config = Config::find(1);
+        
+        return view('backend.config.create', compact('config'));
     }
 
     /**
@@ -35,7 +37,39 @@ class ConfigController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+
+        if($input['config_ini_lunch'] >= $input['config_ini_dinner'] || $input['config_end_lunch'] >= $input['config_ini_dinner']){
+            abort(400, 'Ação não permitida.');
+        }
+        elseif($input['config_ini_lunch'] >= $input['config_end_lunch']){
+            abort(400, 'Ação não permitida.');
+        }
+        elseif($input['config_ini_dinner'] >= $input['config_end_dinner']){
+            abort(400, 'Ação não permitida.');
+        }
+        try {
+
+            $config = Config::updateOrCreate(
+                [
+                    'id_config' => 1 
+                ],
+                [
+                    'config_value' => $input['config_value'],
+                    'config_ini_lunch' => $input['config_ini_lunch'],
+                    'config_end_lunch' => $input['config_end_lunch'],
+                    'config_ini_dinner' => $input['config_ini_dinner'],
+                    'config_end_dinner' => $input['config_end_dinner']
+                ]);
+
+        }catch(Exception $e)
+
+        {
+            return false;
+        }
+
+        return redirect()->route('refectory_config.index');
+
     }
 
     /**

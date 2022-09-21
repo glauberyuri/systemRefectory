@@ -18,9 +18,9 @@ return new class extends Migration
             $table->increments('id_employee');
             $table->string('employee_name', 200);
             $table->string('employee_sector', 200);
-            $table->string('employee_number', 200);
             $table->string('employee_email', 200);
             $table->string('employee_code', 200);
+            $table->integer('is_doctor');
 
             //adicionar o relacionamento com a tabela status
             $table->integer('id_status')->unsigned()->nullable();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Requests;
 use App\Models\Employees;
 use App\Models\Types;
+use App\Models\Config;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -19,9 +20,10 @@ class RequestController extends Controller
     {
         // Pegar todos os tipos de refeições
         $types = Types::all();
+        $config = Config::find(1);
         
         // puxar os dados necessarios para retornar junta da tela de requisição
-        return view('frontend.request', compact('types'));
+        return view('frontend.request', compact('types', 'config'));
 
     }
 
@@ -70,8 +72,9 @@ class RequestController extends Controller
 
     public function list(Request $request)
     {
-        $requesition = Requests::selectRaw("id_request, request_status, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
+        $requesition = Requests::selectRaw("id_request, request_status, emp.employee_sector, st.id_status, emp.employee_code, emp.employee_name, tp.type_description")
                             ->leftJoin('employees as emp', 'requests.id_employee', '=', 'emp.id_employee' )
+                            ->leftJoin('status as st', 'requests.id_status', '=', 'st.id_status' )
                             ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                             ->get()->toArray();
 

@@ -100,7 +100,7 @@
                                     </div>
                             </div>
                             <div class="card-footer">
-                            <strong>Valor : R$ 5,00</strong>   
+                            <strong>Valor : R$ {{number_format($config->config_value, 2, ',', '.');}}</strong>   
                             </div>
                             <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

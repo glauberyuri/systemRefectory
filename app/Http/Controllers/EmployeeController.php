@@ -84,7 +84,7 @@ class EmployeeController extends Controller
     public function edit($id_employee)
     {
         if($id_employee){
-            return Employees::selectRaw('employee_name, employee_sector, id_employee, employee_code, employee_email, employee_number, st.id_status')
+            return Employees::selectRaw('employee_name, employee_sector, id_employee, employee_code, employee_email, st.id_status')
                             ->leftjoin('status as st', 'employees.id_status', '=', 'st.id_status')
                             ->where('id_employee', $id_employee)
                             ->get()->first();
