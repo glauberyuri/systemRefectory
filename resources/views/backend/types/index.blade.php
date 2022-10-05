@@ -91,7 +91,6 @@
             </div>
                 <div class="modal-body">
                 <input type="hidden" id="modal-edit-types-id_type">
-                 <form id="form-modal-edit-types" method="POST" novalidate="novalidate">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 offset-md-3 mr-auto ml-auto">
@@ -110,7 +109,6 @@
                             <span id="payment-button-amount">Cadastrar</span>
                             <span id="payment-button-sending" style="display:none;">Sending…</span>
                         </button>
-                </form>
             </div>
         </div>
         <!-- /.modal-content -->
