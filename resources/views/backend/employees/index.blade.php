@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 @push('css')
 @endpush
+@section('title')
+Lista de Funcionarios
+@endsection
 @section('content')
 <div class="main-content">
                 <div class="section__content section__content--p30">
@@ -26,6 +29,7 @@
                                                         <th scope="col">Matricula</th>
                                                         <th scope="col">Nome</th>
                                                         <th scope="col">Setor</th>
+                                                        <th scope="col">Medico</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col">Ações</th>
                                                         </tr>
@@ -91,7 +95,7 @@
                             <label for="cc-number"  class="control-label mb-1">Status</label>
                             <div class="form-group">
                                 <label class="switch switch-default switch-success mr-2">
-                                    <input type="checkbox" name="id_status" id="id_status"  class="switch-input" checked="true">
+                                    <input type="checkbox" name="employee_status" id="employee_status" value="1" class="switch-input" checked="true">
                                     <span class="switch-label"></span>
                                     <span class="switch-handle"></span>
                                 </label>
@@ -101,7 +105,7 @@
                             <label for="cc-number"  class="control-label mb-1">Médico?</label>
                             <div class="form-group">
                             <label class="switch switch-default switch-success mr-2">
-                                <input type="checkbox" name="is_doctor" id="is_doctor"  class="switch-input">
+                                <input type="checkbox" name="is_doctor" id="is_doctor" value="1" class="switch-input"  >
                                 <span class="switch-label"></span>
                                 <span class="switch-handle"></span>
                             </label>
@@ -169,7 +173,7 @@
                             <label for="cc-number" class="control-label mb-1">Status</label>
                             <div class="form-group">
                             <label class="switch switch-default switch-success mr-2">
-                                <input type="checkbox" id="model-employee_id_status" name="id_status"  class="switch-input" checked="true">
+                                <input type="checkbox" id="model-employee_status" name="employee_status"   class="switch-input" value="1" checked="true">
                                 <span class="switch-label"></span>
                                 <span class="switch-handle"></span>
                             </label>
@@ -179,7 +183,7 @@
                             <label for="cc-number"  class="control-label mb-1">Médico?</label>
                             <div class="form-group">
                             <label class="switch switch-default switch-success mr-2">
-                                <input type="checkbox" name="model-is_doctor" id="model-is_doctor"  class="switch-input">
+                                <input type="checkbox" name="is_doctor" id="model-is_doctor" value="1" class="switch-input">
                                 <span class="switch-label"></span>
                                 <span class="switch-handle"></span>
                             </label>
@@ -188,7 +192,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                        <button id="payment-button" type="button" onclick="editEmployee()" class="btn btn-lg btn-info btn-block">
+                        <button id="payment-button" type="button" onclick="updateEmployee()" class="btn btn-lg btn-info btn-block">
                                         <i class="fa  fa-wrench"></i>&nbsp;
                                         <span id="payment-button-amount">Salvar</span>
                                         <span id="payment-button-sending" style="display:none;">Sending…</span>
@@ -267,9 +271,20 @@
                   { data: 'employee_code' },
                   { data: 'employee_name' },
                   { data: 'employee_sector' },
+                  { data: 'is_doctor', render: function(data){
+                    if(data == 1){
+                        return "SIM";
+                    }else{
+                        return "NÃO";
+                    }
+                }},
                   { data: 'employee_status', render: function(data){
-                    return (data == 0 ? "Inativo" : "Ativo");
-                  }},
+                    if(data == 1){
+                        return "Ativo";
+                    }else{
+                        return "inativo";
+                    }
+                }},
                   { data: null, render: function(data, idx, tp){
                     return '<div class="action-btn" style="float: right; font-size: 22px;">'
                               +'<a href="javascript:void(0)" onclick="editEmployee('+data.id_employee+')" class="text-primary edit">'
@@ -332,18 +347,24 @@
             }
           })
           .done(function(data){
-            if(data.employee_name && data.employee_sector){
+        
                 $("#model-employee_name").val(data.employee_name);
                 $("#model-employee_sector").val(data.employee_sector);
                 $("#model-employee_code").val(data.employee_code);
                 $("#modal-edit-employee-id_employee").val(data.id_employee);
                 $("#model-employee_email").val(data.employee_email);
                 $("#model-employee_number").val(data.employee_number);
-                $("#model-employee_id_status").val(data.id_status);
+                if(data.employee_status == 1){
+                    $("#model-employee_status").attr('checked', 'checked');
+                }else{
+                    $("#model-employee_status").removeAttr('checked')
+                }
+                if(data.is_doctor == 1){
+                    $("#model-is_doctor").attr('checked', 'checked');
+                }else{
+                    $("#model-is_doctor").removeAttr('checked')
+                }
                 $("#modal-edit-employee").modal('show');
-            }else{
-                alert("Dados não encontrados com essa matrícula "+ id_employee);
-            }
           })
           .fail(function(jqXHR, textStatus, msg){
             // chamar função de erro
@@ -357,9 +378,9 @@
           var id_employee = $("#modal-edit-employee-id_employee").val();
             console.log(id_employee);
           $.ajax({
-            url : "/refectory_employee/employee_edit/"+id_employee,
+            url : "/refectory_employee/employee_edit_update/"+id_employee,
             type : 'put',
-            data : {'_token': "{{csrf_token()}}"},
+            data :$("#form-modal-edit-employee").serialize(),
             beforeSend : function(){
               // chamar loading.
             }
@@ -382,27 +403,27 @@
         }
 
         function createEmployee(){
-        $.ajax({
-        url : "/refectory_employee/store",
-        type : 'post',
-        data : $("#form-modal-create-employee").serialize(),
-        beforeSend : function(){
-            // chamar loading.
-        }
-        })
-        .done(function(msg){
-        $('#list-employees').DataTable().destroy()
-        $("#modal-create-employee").modal('hide');
-        setTimeout(() => {
-            listEmployees();
-        }, 500);
-        // chamar função de acerto.
-        successmsg("Funcionario atualizado com sucesso!!!");
-        })
-        .fail(function(jqXHR, textStatus, msg){
-        // chamar função de erro
-        errormsg("Não foi possivel criar o funcionario");
-        });
+            $.ajax({
+            url : "/refectory_employee/store",
+            type : 'post',
+            data : $("#form-modal-create-employee").serialize(),
+            beforeSend : function(){
+                // chamar loading.
+            }
+            })
+            .done(function(msg){
+            $('#list-employees').DataTable().destroy()
+            $("#modal-create-employee").modal('hide');
+            setTimeout(() => {
+                listEmployees();
+            }, 500);
+            // chamar função de acerto.
+            successmsg("Funcionario criado com sucesso!!!");
+            })
+            .fail(function(jqXHR, textStatus, msg){
+            // chamar função de erro
+            errormsg("Não foi possivel criar o funcionario");
+            });
         }
 
 

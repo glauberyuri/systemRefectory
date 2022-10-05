@@ -9,29 +9,20 @@
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
-                                <img src="images/icon/logo.png" alt="CoolAdmin">
+                                <img src="{{url ('images/icon/logo-hospital.png')}}" alt="HCMR">
                             </a>
                         </div>
+                       
                         <div class="login-form">
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
                                 <div class="form-group">
                                     <label>Email</label>
                                     <input class="au-input au-input--full" type="email" name="email" placeholder="Email">
-                                        @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
                                 </div>
                                 <div class="form-group">
                                     <label>Senha</label>
                                     <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
                                 </div>
                                 <div class="login-checkbox">
                                     <label>
@@ -43,6 +34,11 @@
                                 </div>
                                 <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">{{ __('Login') }}</button>
                             </form>
+                            @if(session('msg'))
+                                    <div class="alert alert-danger" role="alert">
+                                        <p>{{ session('msg') }}</p>
+                                    </div>
+                                @endif
                             <div class="register-link">
                                 <p>
                                     Primeiro acesso?

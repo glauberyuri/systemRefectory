@@ -18,6 +18,7 @@ return new class extends Migration
             $table->increments('id_request');
             $table->float('request_value');
             $table->datetime('request_date');
+            $table->integer('request_status');
             $table->integer('is_dinner');
 
 
@@ -25,15 +26,13 @@ return new class extends Migration
             $table->integer('id_employee')->unsigned()->nullable();
             $table->foreign('id_employee')->references('id_employee')->on('employees');
 
-            //adicionar o relacionamento com a tabela status
-            $table->integer('id_status')->unsigned()->nullable();
-            $table->foreign('id_status')->references('id_status')->on('status');
 
             //adicionar o relacionamento com a tabela tipos
             $table->integer('id_type')->unsigned()->nullable();
             $table->foreign('id_type')->references('id_type')->on('types');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

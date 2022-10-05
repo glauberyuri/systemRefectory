@@ -18,14 +18,14 @@ return new class extends Migration
             $table->increments('id_employee');
             $table->string('employee_name', 200);
             $table->string('employee_sector', 200);
+            $table->integer('employee_status')->default('0');
             $table->string('employee_email', 200);
             $table->string('employee_code', 200);
-            $table->integer('is_doctor');
+            $table->integer('is_doctor')->default('0');
 
-            //adicionar o relacionamento com a tabela status
-            $table->integer('id_status')->unsigned()->nullable();
-            $table->foreign('id_status')->references('id_status')->on('status');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

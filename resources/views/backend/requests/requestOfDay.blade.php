@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 @push('css')
 @endpush
+@section('title')
+  Solicitações diaria
+@endsection
 @section('content')
   <!-- Column -->
 <div class="main-content">
@@ -75,14 +78,62 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h5 class="mt-0">Cuidado </h5>
-                <p>Realmente deseja seguir com essa ação?.
+                <h5 class="mt-0">Atenção! </h5>
+                <p>Você esta prestes a informar o descate de uma refeição, essa ação é irreversível e o valor será cobrado do solicitante!
+                </p>
+                <p>
+                  Deseja prosseguir com a ação?
                 </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn text-secondary btn-light-secondary"
                     data-bs-dismiss="modal">VOLTAR</button>
                 <button type="button" onclick="deleteRequest()" class="btn btn-danger font-medium">SIM</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- Modal Transferir Requisição -->
+<div id="modal-transfer-request" class="modal fade" tabindex="-1"
+    aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          @csrf
+            <div class="modal-header modal-colored-header bg-primary text-white">
+                <h4 class="modal-title" id="danger-header-modalLabel" style="color:white;">Transferir refeição
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                          <i class="fa fa-user"></i>
+                          <strong class="card-title pl-2">Dados do novo funcionario</strong>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 s">
+                                <input type="hidden" id="id_employee">
+                                <input type="hidden" id="id_request">
+                                <input type="text" id="employee_code" name="request_code" onkeyup="findEmployee()" placeholder="Matricula" class="form-control">
+                                <div class="card-body text-secondary"></div>
+                            </div>
+                            <div class="col-md-8 s">
+                              <div class="location text-sm-center">
+                                <input type="text" id="label-name"  placeholder="Nome do colaborador" class="form-control" disabled>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              <div class="modal-footer">
+                <button type="button" class="btn text-secondary btn-light-secondary"
+                    data-bs-dismiss="modal">VOLTAR</button>
+                <button type="button" onclick="Transfer()" class="btn btn-primary font-medium">Transferir</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -127,18 +178,37 @@
                   { data: 'employee_code'},
                   { data: 'employee_name'},
                   { data: 'employee_sector' },
-                  { data: 'request_status'},
+                  { data: 'request_status', render: function(data, idx, tp){
+                    if(data == 1){
+                      return '<span class="badge badge-primary">Solicitado</span>'
+                    }if(data == 2){
+                      return '<span class="badge badge-success">Entregue</span>'
+                    } if(data == 3){
+                      return '<span class="badge badge-danger">Descartado</span>'
+                    }
+                    if(data == 4){
+                      return '<span class="badge badge-primary">Transferido</span>'
+                    }
+                  }},
                   { data: 'type_description'},
                   { data: null, render: function(data, idx, tp){
+                    
+                    if(data.request_status == 1){
                     return '<div  class="action-btn" style="float: right; font-size: 22px;">'
-                              +'<a href="javascript:void(0)" onclick="ApproveRequest('+data.id_request+')" class="text-primary edit">'
-                                +'<i class="fa fa-check"></i>'
+                              +'<a href="javascript:void(0)" onclick="ApproveRequest('+data.id_request+')" class="text-success edit">'
+                                +'<i class="fa fa-check"></i> '
+                              +'</a>'
+                              +'<a href="javascript:void(0)" onclick="openModalTransferRequest('+data.id_request+')" class="text-primary delete ms-2">'
+                                +'<i class="fas fa-exchange-alt"></i> '
                               +'</a>'
                               +'<a href="javascript:void(0)" onclick="openModalDeleteRequest('+data.id_request+')" class="text-danger delete ms-2">'
                                 +'<i class="fa fa-ban"></i>'
                               +'</a>'
                               
                             +'</div>';
+                    }else{
+                      return null;
+                    }
                   }},
               ]
           });
@@ -148,6 +218,35 @@
           $("#modal-delete-request").modal('show');
           $("#modal-delete-request-id_request").val(id_request);
         }
+
+        function openModalTransferRequest(id_request){
+          $("#modal-transfer-request").modal('show');
+          $("#id_request").val(id_request);
+        }
+
+        function findEmployee(){
+
+
+          $.ajax({
+            url : "{{route('refectory_employee.findEmployee')}}",
+            type : 'get',
+            data : {'_token': "{{csrf_token()}}", 'id_employee': $('#employee_code').val()},
+            beforeSend : function(){
+              // chamar loading.
+            }
+          })
+
+          .done(function(data){
+
+            $("#label-name").val(data.employee_name);
+            $("#id_employee").val(data.id_employee);
+          })
+          .fail(function(jqXHR, textStatus, msg){
+            // chamar função de erro 
+            errormsg();
+          });
+        }
+        
 
         function deleteRequest(){
           
@@ -187,7 +286,7 @@
           })
           .done(function(msg){
             $('#list-request').DataTable().destroy();
-            successmsg("Refeição cancelada com sucesso!!!");
+            successmsg("Refeição entregue com sucesso!!!");
             setTimeout(() => {
               listRequest();
             }, 500);
@@ -198,6 +297,32 @@
             errormsg();
           });
         }
+
+        function Transfer(){
+
+          $.ajax({
+            url : "/refectory_request/transfer",
+            type : 'post',
+            data : {'_token': "{{csrf_token()}}",'id_employee': $('#id_employee').val(),'id_request': $('#id_request').val()},
+            beforeSend : function(){
+                // chamar loading.
+            }
+            })
+            .done(function(msg){
+              $('#list-request').DataTable().destroy()
+            $("#modal-transfer-request").modal('hide');
+            
+            setTimeout(() => {
+                listRequest();
+            }, 500);
+            // chamar função de acerto.
+            successmsg("Refeição trasnferida com sucesso!!!");
+            })
+            .fail(function(jqXHR, textStatus, msg){
+            // chamar função de erro
+            errormsg("Não foi possivel transferir a refeição");
+            });
+          }
     </script>
 
 @endpush

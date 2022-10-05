@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Employees;
 use App\Models\Types;
 
 class Requests extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     public $table = 'requests';
 
@@ -22,6 +24,7 @@ class Requests extends Model
         'request_date',
         'id_employee',
         'id_type',
+        'is_dinner',
 
 
     ];
@@ -39,6 +42,7 @@ class Requests extends Model
         'request_date'=> 'datetime',
         'id_employee' => 'integer',
         'id_type' => 'integer',
+        'is_dinner' => 'integer',
 
     ];
 
@@ -46,6 +50,7 @@ class Requests extends Model
     {
         return $this->belongsTo(Employees::class);
     }
+    
     public function type()
     {
         return $this->hasOne(Types::class);

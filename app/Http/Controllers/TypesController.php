@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class TypesController extends Controller
 {
+    // public function __contruct() {
+
+        
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,7 @@ class TypesController extends Controller
      */
     public function index()
     {
-        //
+        return view('backend.types.index');
     }
 
     /**
@@ -35,7 +39,18 @@ class TypesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+
+        try
+        {
+            $type = Types::create($input);
+        }
+        catch(Exception $e)
+        {
+            return false;
+        }
+
+        return view("backend.types.index");
     }
 
     /**
@@ -44,9 +59,20 @@ class TypesController extends Controller
      * @param  \App\Models\Types  $types
      * @return \Illuminate\Http\Response
      */
-    public function show(Types $types)
+    public function list(Request $request)
     {
-        //
+       $type = Types::selectRaw('id_type, type_description')->get()->toArray();
+
+       $table = [
+
+            "draw" => $request->input('draw'),
+            "recordsTotal" => count($type),
+            "recordsFiltered" => count($type),
+            'data' => $type,
+
+        ];
+        
+        return $table;
     }
 
     /**
@@ -55,9 +81,16 @@ class TypesController extends Controller
      * @param  \App\Models\Types  $types
      * @return \Illuminate\Http\Response
      */
-    public function edit(Types $types)
+    public function edit(Types $types, $id_type)
     {
-        //
+        if($id_type){
+            return Types::selectRaw('type_description, id_type')
+                            ->where('id_type', $id_type)
+                            ->get()->first();
+        }else{
+            return FALSE;
+        }
+    
     }
 
     /**
@@ -67,9 +100,22 @@ class TypesController extends Controller
      * @param  \App\Models\Types  $types
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Types $types)
+    public function update(Request $request, $id_type)
     {
-        //
+        $type = Types::find($id_type);
+        
+        $input = $request->all();
+
+
+        try
+        {
+            $type->update($input);
+        }
+        catch(Exception $e)
+        {
+            return false;
+        }
+
     }
 
     /**
@@ -78,8 +124,17 @@ class TypesController extends Controller
      * @param  \App\Models\Types  $types
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Types $types)
+    public function destroy($id_type)
     {
-        //
+        $type = Types::find($id_type);
+
+        try
+        {
+            $type->delete();
+        }
+        catch(Exception $e)
+        {
+            return false;
+        }
     }
 }

@@ -1,5 +1,7 @@
 @extends('layouts.auth.layout')
-
+@section('title')
+Solicitação
+@endsection
 @section('content')
 
 <body class="animsition">
@@ -10,29 +12,55 @@
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
-                                <img src="images/logo-hospital.png" alt="HCMR">
+                                <img src="{{url ('images/icon/logo-hospital.png')}}" alt="HCMR">
                             </a>
                         </div>
-                        <div class="login-form">
-                            <form>
-                            @csrf
-                                <div class="form-group">
-                                    <label>Reserva de Refeições</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <input type="text" id="request_code" name="request_code" placeholder="Matricula" class="form-control">
+                                @if(isset($erro))
+                                    <div class="alert alert-danger" role="alert">
+                                        <p>{{ $erro }}</p><br />
+                                        <p>Solicitação de Almoço:</p>
+                                        <p>{{date("H:i", strtotime($config['config_ini_lunch']))}} até  {{date('H:i',strtotime( $config['config_end_lunch']))}}</p><br />
+                                        <p>Solicitação de Janta:</p>
+                                        <p>{{date("H:i",strtotime( $config['config_ini_dinner']))}} até  {{date('H:i', strtotime($config['config_end_dinner']))}}</p>
                                     </div>
-                                </div>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="button" class="btn btn-secondary mb-1" onclick="openModalRequest()">Solicitar</button>
-                            </form>
-                            <div class="register-link">
-                                <p>
-                                    Cancelar pedido?
-                                    <a href="#">clique aqui</a>
-                                </p>
-                            </div>
+                                @endif
+
+                                @if(session('success'))
+                                    <div class="alert alert-success" role="alert">
+                                        <p>{{ session('success') }}</p><br />
+                                    </div> 
+                                    <a href="/" class="au-btn au-btn--block au-btn--green m-b-20 btn btn-secondary mb-1">  <button>Solicitar novamente</button></a>
+                                @endif
+                                
+                        <div class="login-form">
+                   
+                            @if(!isset($erro) && !session('success'))
+                                @csrf
+                                    <div class="form-group">
+                                        <label>Reserva de Refeições</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            <input type="text" id="request_code" name="request_code" placeholder="Matricula" class="form-control">
+                                        </div>
+                                    </div>
+                                        <button class="au-btn au-btn--block au-btn--green m-b-20" href="#" class="btn btn-secondary mb-1" onclick="openModalRequest()">Solicitar</button>
+                                    <div class="register-link">
+                                        <div class="social-login-content">
+                                            <div class="social-button">
+                                                <a class="au-btn au-btn--block au-btn--blue m-b-20"  href="{{route('refectory_request.extract')}}">Ver Extrato</a>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <p>
+                                            Cancelar pedido?
+                                            <a href="{{route('refectory_request.cancel_form')}}">clique aqui</a>
+                                        </p>
+                                    </div>
+                            @endif
+
+                            
                         </div>
                     </div>
                 </div>
@@ -74,7 +102,7 @@
                                             <label for="exampleInputName2" class="pr-1  form-control-label">Nome</label>
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            <input type="text" id="model-request-name" name="model-request-name"  required="" class="form-control">
+                                            <input type="text" id="model-request-name" name="model-request-name"  required="" class="form-control" disabled>
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -82,7 +110,7 @@
                                                 <label for="exampleInputEmail2" class="px-1  form-control-label">Setor</label>
                                             </div>
                                             <div class="col-12 col-md-9">
-                                                <input type="text" id="model-request-sector"  name="model-request-sector" required="" class="form-control">
+                                                <input type="text" id="model-request-sector"  name="model-request-sector" required="" class="form-control" disabled>
                                             </div>
                                     </div>
                                     <div class="row form-group">
@@ -100,14 +128,15 @@
                                     </div>
                             </div>
                             <div class="card-footer">
-                            <strong>Valor : R$ {{number_format($config->config_value, 2, ',', '.');}}</strong>   
+                                <strong>Valor : R$ {{number_format($config->config_value, 2, ',', '.');}}</strong>   
+                                </div>
+                                    <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Solictar</button>
+                                    </div>
+                                </form>
+                                    
                             </div>
-                            <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Solictar</button>
-                            </div>
-                            </form>
-                    </div>
             </div>
         </div>
     </div>
@@ -115,8 +144,8 @@
 @endsection
 @push('scripts')
     <script>
-        
         function openModalRequest(){
+
           let request_code = $("#request_code").val();
 
           $.ajax({

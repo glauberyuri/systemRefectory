@@ -8,7 +8,7 @@
     <meta name="description" content="au theme template">
     <meta name="author" content="Hau Nguyen">
     <meta name="keywords" content="au theme template">
-
+    <link rel="icon" type="image/x-icon" href="{{url('images/icon/logo-hospital.ico')}}">
     <!-- Title Page-->
     <title>@yield('title')</title>
     <style>
@@ -172,18 +172,22 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
+                        <li>
+                            <a href="{{route('refectory_request.requestsOfDay')}}">
+                                <i class="fas fa-utensils"></i>Atender Solicitações</a>
+                        </li>
                         <li class="active has-sub">
                             <a class="js-arrow">
-                            <i class="fas fa-utensils"></i>Solicitações</a>
+                            <i class="far fa-check-square"></i>Relatórios</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a href="{{route('refectory_request.showrequest')}}">Todas Solicitaçoes</a>
+                                    <a href="{{route('refectory_reports.monthReports')}}">Fechamento Mensal</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('refectory_request.requestsOfDay')}}">Atender Solicitações</a>
+                                    <a href="{{route('refectory_reports.requestsToDay')}}">Solicitações</a>
                                 </li>
                                 <li>
-                                    <a href="index4.html">Dashboard 4</a>
+                                    <a href="{{route('refectory_reports.employeeReports')}}">Solicitações por funcionario</a>
                                 </li>
                             </ul>
                         </li>
@@ -192,12 +196,9 @@
                             <a href="{{route('refectory_employee.index')}}">
                                 <i class="fas  fa-users"></i>Funcionários</a>
                         </li>
+                      
                         <li>
-                            <a href="form.html">
-                                <i class="far fa-check-square"></i>Relatórios</a>
-                        </li>
-                        <li>
-                            <a href="chart.html">
+                            <a href="{{route('users.index')}}">
                                 <i class="fas fa-user"></i>Usuarios</a>
                         </li>
                     </ul>
@@ -213,7 +214,7 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                     <div class="header-wrap">
-                        <h4>Sistema de Soluções para Gestão Hospitalar</h4>
+                        <h4>Sistema de Gestão de Refeições</h4>
                            <div class="header-button">
                                <div class="account-wrap">
                                    <div class="account-item clearfix js-item-menu">

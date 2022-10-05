@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 @push('css')
 @endpush
+@section('title')
+  Relatório Mensal de solicitações
+@endsection
 @section('content')
   <!-- Column -->
 <div class="main-content">
@@ -20,9 +23,8 @@
                       <th scope="col">Matricula</th>
                       <th scope="col">Solicitante</th>
                       <th scope="col">Setor</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Tipo</th>
-                      <th scope="col">Ações</th>
+                      <th scope="col">Quantidade</th>
+                      <th scope="col">Valor</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -39,10 +41,10 @@
 @push('scripts')
     <script>
         $(function(){
-            listRequestDay();
+            listRequest();
         });
 
-        function listRequestDay(){
+        function listRequest(){
           $('#list-request').DataTable( {
               processing: true,
               //serverSide: true,
@@ -70,50 +72,13 @@
                   { data: 'employee_code'},
                   { data: 'employee_name'},
                   { data: 'employee_sector' },
-                  { data: 'id_status'},
-                  { data: 'type_description'},
-                  { data: null, render: function(data, idx, tp){
-                    return '<div  class="action-btn" style="float: right; font-size: 22px;">'
-                              +'<a href="/refectory_request/'+data.id_request+'/approve" class="text-primary edit">'
-                                +'<i class="fa fa-check"></i>'
-                              +'</a>'
-                              +'<a href="javascript:void(0)" onclick="openModalDeleteRequest('+data.id_request+')" class="text-danger delete ms-2">'
-                                +'<i class="fa fa-ban"></i>'
-                              +'</a>'
-                            +'</div>';
-                  }},
+                  { data: 'request_qty'},
+                  { data: 'request_value_total'},
+                 
               ]
           });
         }
 
-        function openModalDeleteRequest(id_request_product){
-          $("#modal-delete-request_product").modal('show');
-          $("#modal-delete-request-product-id_request_product").val(id_request_product);
-        }
-
-        function deleteRequest(){
-          var id = $("#modal-delete-request-product-id_request_product").val();
-          $.ajax({
-            url : "/stock_request/"+ id,
-            type : 'delete',
-            data : {'_token': "{{csrf_token()}}"},
-            beforeSend : function(){
-              // chamar loading.
-            }
-          })
-          .done(function(msg){
-            $('#list-request-product').DataTable().destroy()
-            $("#modal-delete-request_product").modal('hide');
-            setTimeout(() => {
-                listRequestProduct();
-            }, 500);
-           
-          })
-          .fail(function(jqXHR, textStatus, msg){
-            // chamar função de erro
-            errormsg("Não foi possivel cancelar a solicitação");
-          });
-        }
     </script>
 
 @endpush
