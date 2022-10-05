@@ -289,18 +289,24 @@ class RequestController extends Controller
     {
         $input = $request->all();
         
-        $employee = Employees::where('employee_code', $input['request_code']);
+        $employee = Employees::where('employee_code', $input['request_code'])->first();
 
-        try
-        {
-            $employee->delete();
-        }
-        catch(Exception $e)
-        {
-            return false;
-        }
+        ( isset($Request->id_employee))? $Request = Requests::where('id_employee', $employee->id_employee)->first() : '' ;
 
-        return redirect('/')->with('success', 'Refeição cancelada com sucesso');
+        if(isset($Request->request_status) && $Request->request_status === 1){
+            try
+            {
+                $Request->delete();
+            }
+            catch(Exception $e)
+            {
+                return false;
+            }
+        }else{
+           (isset($employee->employee_name))? $error ='Não existem solicitação em aberto para '.$employee->employee_name.' que possam ser canceladas': $error ='Matricula inválida';
+           return redirect('/')->with('error', $error);
+        }
+        return redirect('/')->with('success', 'Solicitação de '.$employee->employee_name.' cancelada com sucesso');
     }
     
 

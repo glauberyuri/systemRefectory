@@ -31,6 +31,11 @@ Solicitação
                                     </div> 
                                     <a href="/" class="au-btn au-btn--block au-btn--green m-b-20 btn btn-secondary mb-1">  <button>Solicitar novamente</button></a>
                                 @endif
+                                @if(session('error'))
+                                    <div class="alert alert-danger" role="alert">
+                                        <p>{{ session('error') }}</p><br />
+                                    </div> 
+                                @endif
                                 
                         <div class="login-form">
                    

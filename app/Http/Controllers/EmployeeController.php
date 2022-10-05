@@ -193,7 +193,7 @@ class EmployeeController extends Controller
     public function employeeReportsPDF(Request $request){
 
         $input = $request->all();
-
+        $total = 0;
         
         if(isset($input['id_employee']))
         {
@@ -221,6 +221,7 @@ class EmployeeController extends Controller
                                 ->where('emp.employee_code', $input['request_code'])
                                 ->get()
                                 ->toArray();
+                                
                 if(isset($employee[0]['id_employee'])){
                     $total = Requests::selectRaw('SUM(requests.request_value) as total')
                     ->where('id_employee', $employee[0]['id_employee'])
