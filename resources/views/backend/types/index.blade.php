@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 @push('css')
 @endpush
+@section('title')
+Tipos
+@endsection
 @section('content')
   <!-- Column -->
 <div class="main-content">
@@ -51,7 +54,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
                 <div class="modal-body">
-                 <form id="form-modal-create-types" method="POST" novalidate="novalidate">
+                 <form id="form-modal-create-types"  novalidate="novalidate">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 offset-md-3 mr-auto ml-auto">
@@ -89,9 +92,10 @@
                 </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form id="form-modal-edit-types" novalidate="novalidate">
+              @csrf
                 <div class="modal-body">
                 <input type="hidden" id="modal-edit-types-id_type">
-                    @csrf
                     <div class="row">
                         <div class="col-md-6 offset-md-3 mr-auto ml-auto">
                                 <div class="card-body text-secondary">
@@ -105,20 +109,18 @@
                 </div>
             <div class="modal-footer">
                         <button id="payment-button" type="button" onclick="updateTypes()" class="btn btn-lg btn-info btn-block">
-                            <i class="fa fa-plus-square"></i>&nbsp;
-                            <span id="payment-button-amount">Cadastrar</span>
+                            <i class="fa fa-wrench"></i>&nbsp;
+                            <span id="payment-button-amount">Editar</span>
                             <span id="payment-button-sending" style="display:none;">Sending…</span>
                         </button>
             </div>
         </div>
+        </form>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
-
-
 <!-- Modal deletar funcionario -->
 <div id="modal-delete-type" class="modal fade" tabindex="-1"
     aria-labelledby="danger-header-modalLabel" aria-hidden="true">
@@ -148,9 +150,6 @@
 </div>
 <!-- /.modal -->
 @endsection
-
-
-
 @push('scripts')
     <script>
         $(function(){
@@ -262,9 +261,10 @@
           $.ajax({
             url : "/types/types_edit_update/"+id_type,
             type : 'put',
-            data :$("#form-modal-edit-types").serialize(),
+            data : $("#form-modal-edit-types").serialize(),
             beforeSend : function(){
               // chamar loading.
+              location.reload(true);
             }
           })
 
@@ -302,9 +302,9 @@
             })
 
             .done(function(msg){
-
             $('#list-types').DataTable().destroy()
             $("#modal-create-types").modal('hide');
+            location.reload(true);
             
             setTimeout(() => {
                 listTypes();

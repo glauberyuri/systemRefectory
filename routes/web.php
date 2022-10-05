@@ -70,8 +70,8 @@ Route::group(["prefix" => "types"], function(){
     Route::get("/list",                                                           ["as" => "types.list", "uses" => "TypesController@list"]);
     Route::post("/store",                                                         ["as" => "types.store", "uses" => "TypesController@store"]);
     Route::delete("/types_delete/{id}",                                           ["as" => "types.delete", "uses" => "TypesController@destroy"]);
-    Route::get("/types_edit/{id}",                                             ["as" => "types.edit", "uses" => "TypesController@edit"]);
-    Route::match(["put", "patch"],"/types_edit_update/{id}",                   ["as" => "types.edit_update", "uses" => "TypesController@update"]);
+    Route::get("/types_edit/{id}",                                                ["as" => "types.edit", "uses" => "TypesController@edit"]);
+    Route::match(["put", "patch"],"/types_edit_update/{id}",                      ["as" => "types.edit_update", "uses" => "TypesController@update"]);
 
 });
 

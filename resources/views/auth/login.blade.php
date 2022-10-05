@@ -1,5 +1,7 @@
 @extends('layouts.auth.layout')
-
+@section('title')
+Login
+@endsection
 @section('content')
 <body class="animsition">
     <div class="page-wrapper">

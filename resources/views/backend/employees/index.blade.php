@@ -312,7 +312,6 @@ Lista de Funcionarios
         function deleteEmployee(){
 
           var id_employee = $("#modal-delete-employee-id_employee").val();
-            console.log(id_employee);
           $.ajax({
             url : "/refectory_employee/employee_delete/"+id_employee,
             type : 'delete',
@@ -387,7 +386,6 @@ Lista de Funcionarios
           })
 
           .done(function(msg){
-
             successmsg("Funcionario editado com sucesso");
             $('#list-employees').DataTable().destroy()
             $("#modal-edit-employee").modal('hide');
