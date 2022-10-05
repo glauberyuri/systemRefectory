@@ -291,8 +291,7 @@ class RequestController extends Controller
         
         $employee = Employees::where('employee_code', $input['request_code'])->first();
 
-        ( isset($Request->id_employee))? $Request = Requests::where('id_employee', $employee->id_employee)->first() : '' ;
-
+        ( isset($employee->id_employee))? $Request = Requests::where('id_employee', $employee->id_employee)->where('request_status', 1)->first() : '' ;
         if(isset($Request->request_status) && $Request->request_status === 1){
             try
             {
