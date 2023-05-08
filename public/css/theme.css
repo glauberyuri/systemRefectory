@@ -1292,6 +1292,7 @@ section {
 @media (max-width: 991px) {
     .header-button {
         margin-top: 30px;
+        margin-left: 50%;
         width: 100%;
         -webkit-box-pack: justify;
         -webkit-justify-content: space-between;
@@ -1435,7 +1436,8 @@ section {
 }
 
 .account-dropdown {
-    min-width: 305px;
+    max-width: 350px;
+    min-width: 250px;
     position: absolute;
     top: 58px;
     right: 0;
@@ -1700,7 +1702,8 @@ section {
     height: 15px;
 }
 
-.header-mobile .hamburger .hamburger-box .hamburger-inner {
+.header-mobile .hamburger .hamburger-box .hamburger-inner {  
+    background: #f8f8f8;
     width: 20px;
     height: 2px;
     -webkit-border-radius: 0;
@@ -1804,19 +1807,19 @@ section {
 }
 
 .header-mobile-2.header-mobile .hamburger .hamburger-box .hamburger-inner {
-    background: #fff;
+    background: black;
 }
 
 .header-mobile-2.header-mobile .hamburger .hamburger-box .hamburger-inner::before {
-    background: #fff;
+    background: black;
 }
 
 .header-mobile-2.header-mobile .hamburger .hamburger-box .hamburger-inner::after {
-    background: #fff;
+    background: black;
 }
 
 .sub-header-mobile-2 {
-    background: #fff;
+    background: black;
     padding: 15px;
 }
 
@@ -14629,6 +14632,11 @@ section {
 .img-120 {
     width: 120px;
     height: 120px;
+}
+
+.img-90 {
+    width: 100px;
+    height: 70px;
 }
 
 .vmap {

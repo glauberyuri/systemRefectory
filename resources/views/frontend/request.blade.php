@@ -23,17 +23,49 @@ Solicitação
                                         <p>Solicitação de Janta:</p>
                                         <p>{{date("H:i",strtotime( $config['config_ini_dinner']))}} até  {{date('H:i', strtotime($config['config_end_dinner']))}}</p>
                                     </div>
-                                @endif
+                                    <a class="au-btn au-btn--block au-btn--blue m-b-20"  href="{{route('refectory_request.extract')}}">Meus Extratos</a>
 
+                                @endif
+                         
                                 @if(session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        <p>{{ session('success') }}</p><br />
-                                    </div> 
-                                    <a href="/" class="au-btn au-btn--block au-btn--green m-b-20 btn btn-secondary mb-1">  <button>Solicitar novamente</button></a>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                            <div class="card-header">
+                                                <p>{{ session('success') }}</p>
+                                                <h4>Data da Requisição  {{date('d-m-Y', strtotime(session('data_day')))}}</h4>
+                                            </div>
+                                                <p class="card-text">
+                                                    <br />
+                                                    <h5>Codigo Requisição -  {{session('id_request')}}</h5>
+                                                    <br />
+                                                    <h5> Horario do pedido - {{date('H:i', strtotime(session('data_request')))}} </h5>
+                                                </p>
+                                                <br />
+                                                <a href="/" class="au-btn au-btn--block au-btn--green m-b-20 btn btn-secondary mb-1">  <button>Solicitar novamente</button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li> {{$error}} </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 @endif
                                 @if(session('error'))
                                     <div class="alert alert-danger" role="alert">
                                         <p>{{ session('error') }}</p><br />
+                                    </div> 
+                                @endif
+                                @if(session('warning'))
+                                    <div class="alert alert-warning" role="alert">
+                                        <p>{{ session('warning') }}</p>
                                     </div> 
                                 @endif
                                 
@@ -95,7 +127,7 @@ Solicitação
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form class="form" method="post" action="{{ route('refectory_request.store') }}" >
+                                <form class="form" id="form-model-request" method="post" action="{{ route('refectory_request.store') }}" >
                                     @csrf
                                         <input type="hidden" id="model-request-status" name="model-request-status" value="1">
                                         <input type="hidden" id="model-request-value" name="model-request-value" value="5">
@@ -115,7 +147,12 @@ Solicitação
                                                 <label for="exampleInputEmail2" class="px-1  form-control-label">Setor</label>
                                             </div>
                                             <div class="col-12 col-md-9">
-                                                <input type="text" id="model-request-sector"  name="model-request-sector" required="" class="form-control" disabled>
+                                                    <select name="sector_select" id="sector_select" class="form-control">
+                                                        <option value="0">Selecione um Setor</option>
+                                                        @foreach($sectors as $sector)
+                                                            <option value="{{$sector->id_sector}}">{{$sector->sector_description}}</option>
+                                                        @endforeach
+                                                    </select>
                                             </div>
                                     </div>
                                     <div class="row form-group">
@@ -137,7 +174,7 @@ Solicitação
                                 </div>
                                     <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Solictar</button>
+                                            <button id="btn-submit" type="submit" class="btn btn-primary">Solictar</button>
                                     </div>
                                 </form>
                                     
@@ -146,7 +183,9 @@ Solicitação
         </div>
     </div>
     <!-- end modal medium -->
+   
 @endsection
+
 @push('scripts')
     <script>
         function openModalRequest(){
@@ -163,7 +202,6 @@ Solicitação
           .done(function(data){
             if(data.employee_name && data.employee_sector){
                 $("#model-request-name").val(data.employee_name);
-                $("#model-request-sector").val(data.employee_sector);
                 $("#model-request-code").val(request_code);
                 $("#model-request-id_employee").val(data.id_employee);
                 $("#modal-request").modal('show');
@@ -177,7 +215,11 @@ Solicitação
           });
         }
 
+        $('#form-model-request').submit(function(){
+
+            $('#btn-submit').attr('disabled', 'disabled');
+        });
+
+
     </script>
-
 @endpush
-

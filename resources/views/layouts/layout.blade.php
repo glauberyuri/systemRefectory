@@ -38,7 +38,7 @@
     <link href="{{url ('vendor/slick/slick.css') }}" rel="stylesheet" media="all">
     <link href="{{url ('vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
     <link href="{{url ('vendor/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" media="all">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Main CSS-->
     <link href="{{url ('css/theme.css')}}" rel="stylesheet" media="all">
 
@@ -46,6 +46,70 @@
 
 <body>
     <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+            <header class="header-mobile d-block d-lg-none">
+                <div class="header-mobile__bar">
+                    <div class="container-fluid">
+                        <div class="header-mobile-inner">
+                            <a class="logo" href="index.html">
+                                <img class="img-90" src="{{url('images/icon/logo-hospital.png')}}" alt="HCMR" />
+                            </a>
+                            <button class="hamburger hamburger--slider" type="button">
+                                <span class="hamburger-box">
+                                    <i class="fas fa-bars"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <nav class="navbar-mobile">
+                    <div class="container-fluid">
+                        <ul class="navbar-mobile__list list-unstyled">
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#"><i class="fas fa-utensils"></i>Solicitações</a>
+                                    <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                        <a href="{{route('refectory_request.requestsOfDay')}}">
+                                            <i class="fas fa-utensils"></i>Atender Solicitações</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{route('refectory_employee.index')}}">
+                                    <i class="fas  fa-users"></i>Funcionários</a>
+                            </li>
+                            <li>
+                                <a href="{{route('users.index')}}">
+                                    <i class="fas fa-user"></i>Usuarios</a>
+                            </li>
+                            <li>
+                                <a href="{{route('types.index')}}">
+                                    <i class="fas fa-coffee"></i>Tipos</a>
+                            </li>
+                            <li>
+                                <a href="{{route('sectors.index')}}">
+                                    <i class="fas fa-flag"></i>Setores</a>
+                            </li>
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                    <i class="fas fa-copy"></i>Relatórios</a>
+                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                    <li>
+                                        <a href="{{route('refectory_reports.monthReports')}}">Fechamento Mensal</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('refectory_reports.requestsToDay')}}">Solicitações</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('refectory_reports.employeeReports')}}">Solicitações por funcionario</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+        <!-- END HEADER MOBILE-->
         <!-- MENU SIDEBAR-->
         <aside class="menu-sidebar d-none d-lg-block">
             <div class="logo">
@@ -87,6 +151,10 @@
                             <a href="{{route('types.index')}}">
                                 <i class="fas fa-coffee"></i>Tipos</a>
                         </li>
+                        <li>
+                            <a href="{{route('sectors.index')}}">
+                                <i class="fas fa-flag"></i>Setores</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -125,13 +193,13 @@
                                                    <h5 class="name">
                                                        <a href="#">{{$twoNames}}</a>
                                                    </h5>
-                                                   <span class="email">{{Auth::user()->email}}</span>
+                                                   <!-- <span class="email">{{Auth::user()->email}}</span> -->
                                                </div>
                                            </div>
                                            <div class="account-dropdown__body">
                                                <div class="account-dropdown__item">
                                                    <a href="#">
-                                                       <i class="zmdi zmdi-account"></i>Minha Conta</a>
+                                                       <i class="zmdi zmdi-account"></i>Atender</a>
                                                </div>
                                                <div class="account-dropdown__item">
                                                    <a href="{{route('refectory_config.index')}}">
@@ -142,7 +210,7 @@
                                                <a href="#">
                                                     <form method="POST" action="{{ route('logout') }}">
                                                         @csrf
-                                                        <button type="submit"><i class="zmdi zmdi-power"></i></i>Logout</button>
+                                                        <button type="submit"><i class="zmdi zmdi-power"></i>Logout</button>
                                                     </form>
                                                    </a>
                                            </div>

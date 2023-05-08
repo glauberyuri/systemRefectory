@@ -23,6 +23,7 @@ class Requests extends Model
         'request_value',
         'request_date',
         'id_employee',
+        'id_sector',
         'id_type',
         'is_dinner',
 

@@ -17,7 +17,7 @@
     <link href="{{url ('vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all">
     <link href="{{url ('vendor/font-awesome-5/css/fontawesome-all.min.css') }}" rel="stylesheet" media="all">
     <link href="{{url ('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Bootstrap CSS-->
     <link href="{{url ('vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet" media="all">
 
@@ -40,7 +40,6 @@
         @yield('content')
         </div>
         
-        @stack('scripts')
         <!-- Jquery JS-->
         <script src="vendor/jquery-3.2.1.min.js"></script>
         <!-- Bootstrap JS-->
@@ -62,8 +61,11 @@
         <script src="vendor/select2/select2.min.js">
         </script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js" integrity="sha512-zlWWyZq71UMApAjih4WkaRpikgY9Bz1oXIW5G0fED4vk14JjGlQ1UmkGM392jEULP8jbNMiwLWdM8Z87Hu88Fw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!-- Main JS-->
         <script src="js/main.js"></script>
+        @stack('scripts')
+
     </body>
 
 

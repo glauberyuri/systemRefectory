@@ -22,6 +22,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('backend/home');
+        return redirect("/refectory_request/requestday");
     }
 }

@@ -13,19 +13,33 @@
             <tr>
                 <th>#</th>
                 <th>Tipo de refeição</th>
+                <th>Data de Solicitação</th>
+                <th>Refeição</th>
                 <th>Quantidade solicitada</th>
             </tr>
         </thead>
         <tbody>
+            {{$total = 0}}
             @foreach($requests as $i => $e)
+                    {{$total = $total + $e['qtd']}}
                 <tr>
                     <th>{{$i+1}}</th>
                     <th>{{$e['type_description']}}</th>
+                    <th>{{date('d/m/Y')}}</th>
+                    <th>{{($e['is_dinner'] == 1)? 'Jantar' : 'Almoço'}}</th>
                     <th>{{$e['qtd']}}</th>
                 </tr>
-                
+                @if($loop->last)
+                    <tr>
+                        <th> </th>
+                        <th> </th>
+                        <th> </th>
+                        <th>Total:</th>
+                        <th>{{$total}}</th>
+                    </tr> 
+                @endif
             @endforeach
-        </tfoot>
+        </tbody>  
     </table>
     <footer>
         

@@ -20,7 +20,7 @@ Auth::routes(["verify" => true]);
 
 Route::get("/",                                                                                 ["as" => "refectory_request.index",   "uses" => "RequestController@index"]);
 Route::get("/cancel",                                                                           ["as" => "refectory_request.cancel_form",   "uses" => "RequestController@cancelForm"]);
-Route::get("/extract",                                                                           ["as" => "refectory_request.extract",   "uses" => "RequestController@extract"]);
+Route::get("/extract",                                                                          ["as" => "refectory_request.extract",   "uses" => "RequestController@extract"]);
 Route::get("refectory_employee/showModel/{request_code}",                                       ["as" => "refectory_employee.showModel", "uses" => "EmployeeController@showModel"]);
 Route::post("refectory_request/store",                                                          ["as" => "refectory_request.store",   "uses" => "RequestController@store"]);
 Route::post("refectory_request/cancelRequest",                                                  ["as" => "refectory_request.cancelRequest",   "uses" => "RequestController@cancelRequest"]);
@@ -75,10 +75,21 @@ Route::group(["prefix" => "types"], function(){
 
 });
 
+// Setores
+Route::group(["prefix" => "sectors"], function(){
+    Route::get("/",                                                                 ["as" => "sectors.index", "uses" => "SectorController@index"]);
+    Route::get("/list",                                                             ["as" => "sectors.list", "uses" => "SectorController@list"]);
+    Route::post("/store",                                                           ["as" => "sectors.store", "uses" => "SectorController@store"]);
+    Route::delete("/sectors_delete/{id_sector}",                                    ["as" => "sectors.delete", "uses" => "SectorController@destroy"]);
+    Route::get("/sectors_edit/{id_sector}",                                         ["as" => "sectors.edit", "uses" => "SectorController@edit"]);
+    Route::match(["put", "patch"],"/sectors_edit_update/{id_sector}",               ["as" => "sectors.edit_update", "uses" => "SectorController@update"]);
+
+});
+
 // Configuração
 Route::group(["prefix" => "refectory_config"], function () {
     Route::get("/",                                                                 ["as" => "refectory_config.index", "uses" =>  "ConfigController@index"]);
-    Route::post("/store",                                                          ["as" => "refectory_config.store",   "uses" => "ConfigController@store"]);
+    Route::post("/store",                                                           ["as" => "refectory_config.store",   "uses" => "ConfigController@store"]);
 });
 
 //Relatórios

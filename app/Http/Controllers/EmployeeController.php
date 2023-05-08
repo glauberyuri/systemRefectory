@@ -197,7 +197,7 @@ class EmployeeController extends Controller
         
         if(isset($input['id_employee']))
         {
-            $employee = Requests::selectRaw("requests.id_request,date_format(requests.request_date, '%d/%m/%Y  %H:%i:%s') as request_date_formated,date_format(requests.updated_at, '%d/%m/%Y  %H:%i:%s') as updated_date_formated, requests.request_status, requests.request_value, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
+            $employee = Requests::selectRaw("requests.id_request,date_format(requests.created_at, '%d/%m/%Y  %H:%i:%s') as request_date_formated,date_format(requests.updated_at, '%d/%m/%Y  %H:%i:%s') as updated_date_formated, requests.request_status, requests.request_value, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
                                 ->leftJoin('employees as emp', 'requests.id_employee', '=', 'emp.id_employee' )
                                 ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                                 ->whereIn('requests.request_status', [2,3])
@@ -214,7 +214,7 @@ class EmployeeController extends Controller
 
         }else{
 
-            $employee = Requests::selectRaw("requests.id_request,date_format(requests.request_date, '%d/%m/%Y  %H:%i:%s') as request_date_formated,date_format(requests.updated_at, '%d/%m/%Y  %H:%i:%s') as updated_date_formated, requests.request_status, requests.request_value,emp.id_employee, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
+            $employee = Requests::selectRaw("requests.id_request,date_format(requests.created_at, '%d/%m/%Y  %H:%i:%s') as request_date_formated,date_format(requests.updated_at, '%d/%m/%Y  %H:%i:%s') as updated_date_formated, requests.request_status, requests.request_value,emp.id_employee, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
                                 ->leftJoin('employees as emp', 'requests.id_employee', '=', 'emp.id_employee' )
                                 ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                                 ->whereIn('requests.request_status', [2,3])
@@ -253,11 +253,12 @@ class EmployeeController extends Controller
 
     public function requestsToDay(Request $request){
         $input = $request->all();
-        $requests = Requests::selectRaw("tp.type_description, COUNT(requests.request_value) as qtd")
+        $requests = Requests::selectRaw("tp.type_description, COUNT(requests.request_value) as qtd, requests.is_dinner")
                             ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                             ->where('requests.request_status', 1)
                             ->whereRaw("date_format(requests.request_date,'%Y-%m-%d') =". "'".date('Y-m-d')."'")
-                            ->groupBy('tp.type_description')
+                            ->groupBy('tp.type_description','is_dinner')
+                            ->orderBy('tp.type_description', 'DESC')
                             ->get()
                             ->toArray();
 

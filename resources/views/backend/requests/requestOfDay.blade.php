@@ -10,7 +10,7 @@
   <div class="section__content section__content--p30">
     <div class="container-fluid">
       <div class="col-lg-12">
-        <div class="card">
+        <div class="card" >
           <div class="card-header">Solicitações dos Funcionarios</div>
             <div class="card-body">
               <div class="card-title">
@@ -24,6 +24,7 @@
                       <th scope="col">Solicitante</th>
                       <th scope="col">Setor</th>
                       <th scope="col">Status</th>
+                      <th scope="col">Refeição</th>
                       <th scope="col">Tipo</th>
                       <th scope="col">Ações</th>
                       </tr>
@@ -148,8 +149,11 @@
     <script>
         $(function(){
             listRequest();
+          
         });
-
+        $(document).ready(function(){
+          $('#list-request_wrapper').css('overflow', 'auto')
+        })
         function listRequest(){
           $('#list-request').DataTable( {
               processing: true,
@@ -170,6 +174,7 @@
                         "sLast":     	"Ultima"
                     },
               },
+
               ajax: {
                 url: "{{route('refectory_request.listRequestDay')}}",
                 dataSrc: 'data'
@@ -177,7 +182,7 @@
               columns: [
                   { data: 'employee_code'},
                   { data: 'employee_name'},
-                  { data: 'employee_sector' },
+                  { data: 'sector_description' },
                   { data: 'request_status', render: function(data, idx, tp){
                     if(data == 1){
                       return '<span class="badge badge-primary">Solicitado</span>'
@@ -188,6 +193,13 @@
                     }
                     if(data == 4){
                       return '<span class="badge badge-primary">Transferido</span>'
+                    }
+                  }},
+                  { data: 'is_dinner', render: function(data, idx, tp){
+                    if(data == 1){
+                      return '<span class="badge badge-primary">Janta</span>'
+                    }if(data == 0){
+                      return '<span class="badge badge-success">Almoço</span>'
                     }
                   }},
                   { data: 'type_description'},
@@ -212,8 +224,9 @@
                   }},
               ]
           });
+          
         }
-
+        
         function openModalDeleteRequest(id_request){
           $("#modal-delete-request").modal('show');
           $("#modal-delete-request-id_request").val(id_request);

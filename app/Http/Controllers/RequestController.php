@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Requests;
 use App\Models\Employees;
 use App\Models\Types;
+use App\Models\Sector;
 use App\Models\Config;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Exception;
 
 class RequestController extends Controller
 {
@@ -22,22 +24,23 @@ class RequestController extends Controller
 
         // Pegar todos os tipos de refeições
         $types = Types::all();
+        $sectors = Sector::all();
         $config = Config::find(1);
         // date_default_timezone_set('America/Sao_Paulo');
     
-        if( date('H:i:s') >= date('H:i:s', strtotime($config['config_ini_lunch'])) && date('H:i:s') <=  date('H:i:s', strtotime($config['config_end_lunch']))){
+        if( date('H:i') >= date('H:i', strtotime($config['config_ini_lunch'])) && date('H:i') <=  date('H:i', strtotime($config['config_end_lunch']))){
             
-            return view('frontend.request', compact('types', 'config'));
+            return view('frontend.request', compact('types', 'config','sectors'));
         }
-        elseif(date('H:i:s') >= date('H:i:s', strtotime($config['config_ini_dinner'])) && date('H:i:s') <=  date('H:i:s', strtotime($config['config_end_dinner']))){
+        elseif(date('H:i') >= date('H:i', strtotime($config['config_ini_dinner'])) && date('H:i') <=  date('H:i', strtotime($config['config_end_dinner']))){
 
-            return view('frontend.request', compact('types', 'config'));
+            return view('frontend.request', compact('types', 'config', 'sectors'));
 
         }
         // puxar os dados necessarios para retornar junta da tela de requisição
         $erro = 'Você não pode realizar solicitações agora';
 
-        return view('frontend.request', compact('types', 'config','erro'));
+        return view('frontend.request', compact('types', 'config','erro','sectors'));
 
     }
 
@@ -65,6 +68,7 @@ class RequestController extends Controller
 
             'id_employee' => $input['id_employee'],
             'id_type' => $request['id_type'],
+            'id_sector' => $request['id_sector'],
             'request_date' => $request['request_date'],
             'request_status' => 2,
             'request_value' => $request['request_value'],
@@ -86,27 +90,59 @@ class RequestController extends Controller
     {
         $input = $request->all();
         $config = Config::find(1)->toArray();
-        
-        if($request = Requests::where('id_employee',$input['model-request-id_employee'])->where('request_status', 1)->first()){
-            return redirect('/')->with('success', 'Sua solicitação não foi registrada pois você já requisitou hoje');
+        $is_dinner = 0;
+        $is_lunch = 0;
+
+
+        if($input['type_select'] == 0 or  $input['sector_select'] == 0)
+        {
+            return redirect('/')->with('warning', 'Preencha todos os campos para solicitar');
         }
 
         $Requests = array(
             'id_employee' => $input['model-request-id_employee'],
             'id_type' => $input['type_select'],
+            'id_sector' => $input['sector_select'],
             'request_date' => $input['model-request-date'],
             'request_status' => $input['model-request-status'],
             'request_value' => $input['model-request-value'],
             'is_dinner' => 0
         );
-        
-        if( date('H:i:s') >= date('H:i:s', strtotime($config['config_ini_dinner'])) && date('H:i:s') <=  date('H:i:s', strtotime($config['config_end_dinner']))){
-           
+        if( date('H:i') >= date('H:i', strtotime($config['config_ini_dinner'])) && date('H:i') <=  date('H:i', strtotime($config['config_end_dinner']))){
             $Requests['is_dinner'] = 1; 
-
+            $is_dinner = 1;
         }
-        Requests::create($Requests);
-         return redirect('/')->with('success', 'Refeição solicitada com sucesso');
+
+        if( date('H:i') >= date('H:i', strtotime($config['config_ini_lunch'])) && date('H:i') <=  date('H:i', strtotime($config['config_end_lunch']))){
+            $Requests['is_dinner'] = 0; 
+            $is_lunch = 1;
+        }
+
+        if(empty($is_dinner) && empty($is_lunch)){
+            return redirect('/');
+        }
+    
+
+        try {
+            $request = Requests::create($Requests);
+
+            return redirect('/')->with(array(
+                'success'=> 'Refeição solicitada com sucesso',
+                'id_request' => $request->id_request,
+                'data_request' => $request->created_at,
+                'data_day' => $request->request_date
+
+            ));
+
+        }catch(Exception $e){
+            $code = $e->errorInfo[1];
+            $message = $code == 1062 ? 'Refeição já foi solicitada!' : $e->errorInfo[2];
+           
+            
+            
+            return redirect('/')->with('warning', $message);
+        }
+
     }
 
     /**
@@ -124,8 +160,9 @@ class RequestController extends Controller
     public function list(Request $request)
     {
 
-        $requesition = Requests::selectRaw("id_request, request_status, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
+        $requesition = Requests::selectRaw("id_request, request_status,is_dinner, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description,sec.sector_description")
                             ->leftJoin('employees as emp', 'requests.id_employee', '=', 'emp.id_employee' )
+                            ->leftJoin('sectors as sec', 'requests.id_sector', '=', 'sec.id_sector' )
                             ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                             ->get()->toArray();
 
@@ -211,8 +248,9 @@ class RequestController extends Controller
         $dataF= date('Y-m-d 23:59:59');
 
 
-        $requestDay = Requests::selectRaw("id_request,request_date, request_status, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description")
+        $requestDay = Requests::selectRaw("id_request,request_date, request_status, is_dinner, emp.employee_sector, emp.employee_code, emp.employee_name, tp.type_description,sec.sector_description")
                                 ->leftJoin('employees as emp', 'requests.id_employee', '=', 'emp.id_employee' )
+                                ->leftJoin('sectors as sec', 'requests.id_sector', '=', 'sec.id_sector' )
                                 ->leftJoin('types as tp', 'requests.id_type', '=', 'tp.id_type')
                                 ->whereRaw(
                                                 "(request_date BETWEEN '{$dataI}' AND '{$dataF}')"
